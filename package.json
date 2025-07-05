@@ -1,0 +1,27 @@
+{
+  "name": "actomatic",
+  "version": "1.0.0",
+  "description": "A production-ready GitHub Actions template repo to streamline CI/CD across AI, frontend, backend, and DevOps deployments.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MuhammadTahaNasir/actomatic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MuhammadTahaNasir/actomatic/issues"
+  },
+  "homepage": "https://github.com/MuhammadTahaNasir/actomatic#readme",
+  "devDependencies": {
+    "eslint": "^9.30.1",
+    "prettier": "^3.6.2"
+  }
+}
