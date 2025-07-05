@@ -1,0 +1,13 @@
+name: Weekly Cron Update
+
+on:
+  schedule:
+    - cron: "0 3 * * 0"
+
+jobs:
+  weekly-task:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run update script
+        run: python update.py

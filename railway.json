@@ -1,0 +1,11 @@
+{
+  "builds": [
+    {
+      "src": "server/",
+      "use": "@railway/node"
+    }
+  ],
+  "deploy": {
+    "startCommand": "npm start"
+  }
+}

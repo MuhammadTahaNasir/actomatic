@@ -1,0 +1,34 @@
+name: AI Project CI
+
+on: [push, pull_request]
+
+jobs:
+  test-ai:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        run: pytest
+
+      - name: Convert Notebooks to HTML
+        run: |
+          mkdir -p html
+          for notebook in notebooks/*.ipynb; do
+            jupyter nbconvert --to html "$notebook" --output-dir html
+          done
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./html

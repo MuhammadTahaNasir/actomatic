@@ -1,0 +1,21 @@
+name: Backend CI & Deploy (Railway)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  backend-test-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npm test
+      - name: Trigger Railway Deploy
+        run: curl -X POST https://backboard.railway.app/webhook/${{ secrets.RAILWAY_DEPLOY_HOOK }}

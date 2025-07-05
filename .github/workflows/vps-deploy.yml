@@ -1,0 +1,23 @@
+name: Deploy to Private VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H your.vps.ip >> ~/.ssh/known_hosts
+
+      - name: Rsync to VPS
+        run: rsync -avz --exclude=".git" ./ youruser@your.vps.ip:/var/www/your-app
+
+      - name: Restart App on VPS
+        run: ssh youruser@your.vps.ip 'cd /var/www/your-app && docker-compose up -d --build'
