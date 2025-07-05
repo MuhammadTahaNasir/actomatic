@@ -1,0 +1,7 @@
+notebook
+nbconvert
+pandas
+matplotlib
+scikit-learn
+torch
+transformers
