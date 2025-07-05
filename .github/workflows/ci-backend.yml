@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: server  # Change this if your backend folder has a different name or location
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
