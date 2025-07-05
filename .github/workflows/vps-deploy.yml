@@ -6,8 +6,9 @@ on:
 
 jobs:
   deploy:
+    if: secrets.VPS_KEY != '' && secrets.VPS_IP != '' && secrets.VPS_USER != ''
     runs-on: ubuntu-latest
-    if: ${{ secrets.VPS_KEY != '' && secrets.VPS_IP != '' && secrets.VPS_USER != '' }}
+
     steps:
       - uses: actions/checkout@v4
 
