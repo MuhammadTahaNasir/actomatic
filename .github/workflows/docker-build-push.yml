@@ -9,24 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - name: Log in to Docker Hub
+
+      - name: Log in to Docker Hub (skipped if no secrets)
+        if: ${{ secrets.DOCKER_USERNAME && secrets.DOCKER_PASSWORD }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build & Push Client
+      - name: Build Client (no push)
         uses: docker/build-push-action@v5
         with:
           context: ./client
-          push: true
-          tags: yourdockerhubuser/mern-client:latest
+          push: false
+          tags: dummy/mern-client:latest
 
-      - name: Build & Push Server
+      - name: Build Server (no push)
         uses: docker/build-push-action@v5
         with:
           context: ./server
-          push: true
-          tags: yourdockerhubuser/mern-server:latest
+          push: false
+          tags: dummy/mern-server:latest

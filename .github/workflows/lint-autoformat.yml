@@ -10,6 +10,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npx prettier --write .
-      - run: npx eslint . --fix
+
+      # Skip npm ci if no lockfile exists
+      - name: Skip npm ci if no package-lock
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "🔧 No package-lock.json, skipping npm ci"
+          fi
+
+      - name: Run Prettier
+        run: npx prettier --write .
+
+      - name: Run ESLint
+        run: npx eslint . --fix
