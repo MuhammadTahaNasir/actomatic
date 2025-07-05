@@ -7,24 +7,45 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        # Default frontend folder, but users can change this in their repo
-        working-directory: client
+        working-directory: client  # Default folder; users can change this
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run lint
-      - run: npm run build
+
+      # Check if client folder exists
+      - name: Check client folder existence
+        id: check_client
+        run: |
+          if [ -d "./client" ]; then
+            echo "folder_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "folder_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Run install & build only if client folder exists
+      - name: Install dependencies
+        if: steps.check_client.outputs.folder_exists == 'true'
+        run: npm install
+
+      - name: Run lint
+        if: steps.check_client.outputs.folder_exists == 'true'
+        run: npm run lint
+
+      - name: Run build
+        if: steps.check_client.outputs.folder_exists == 'true'
+        run: npm run build
 
   deploy-vercel:
     runs-on: ubuntu-latest
     needs: build-frontend
+    if: needs.build-frontend.outputs.folder_exists == 'true'  # Deploy only if build ran
     steps:
+      - uses: actions/checkout@v4
       - uses: amondnet/vercel-action@v25
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}        # User must add this secret
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}      # User must add this secret
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # User must add this secret
-          working-directory: ./client                       # Default dir, can be changed
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}           # Must add in repo secrets
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}         # Must add in repo secrets
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # Must add in repo secrets
+          working-directory: ./client  # Default, can be changed by user
