@@ -5,17 +5,18 @@ on: [push, pull_request]
 jobs:
   build-frontend:
     runs-on: ubuntu-latest
-    # Removed defaults: run: working-directory: client
+    defaults:
+      run:
+        # Default frontend folder, but users can change this in their repo
+        working-directory: client
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      # Run commands in root, with fallback to prevent failures in template repo
-      - run: npm install || echo "No package.json found, skipping npm install"
-      - run: npm run lint || echo "No lint script found, skipping lint"
-      - run: npm run build || echo "No build script found, skipping build"
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
 
   deploy-vercel:
     runs-on: ubuntu-latest
@@ -23,7 +24,7 @@ jobs:
     steps:
       - uses: amondnet/vercel-action@v25
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          # Removed working-directory: ./client
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}        # User must add this secret
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}      # User must add this secret
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # User must add this secret
+          working-directory: ./client                       # Default dir, can be changed
