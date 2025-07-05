@@ -18,7 +18,7 @@ jobs:
           pip install notebook nbconvert pytest
 
       - name: Run Tests
-        run: pytest
+        run: pytest tests/
 
       - name: Convert Notebooks to HTML
         run: |
