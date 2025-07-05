@@ -7,17 +7,19 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    if: ${{ secrets.VPS_KEY != '' && secrets.VPS_IP != '' && secrets.VPS_USER != '' }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H your.vps.ip >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.VPS_IP }} >> ~/.ssh/known_hosts
 
       - name: Rsync to VPS
-        run: rsync -avz --exclude=".git" ./ youruser@your.vps.ip:/var/www/your-app
+        run: rsync -avz --exclude=".git" ./ ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }}:/var/www/your-app
 
       - name: Restart App on VPS
-        run: ssh youruser@your.vps.ip 'cd /var/www/your-app && docker-compose up -d --build'
+        run: ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_IP }} 'cd /var/www/your-app && docker-compose up -d --build'
